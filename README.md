@@ -4,57 +4,51 @@ Pluggable [``asyncio``](https://docs.python.org/3/library/asyncio.html)
 [Telegram](https://telegram.org) userbot based on
 [Telethon](https://github.com/LonamiWebs/Telethon).
 
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+Mozilla Public License for more details.
+
+
 ## installing
 
-#### The Easy Way
+#### The Easiest Way
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+- Install Docker by following the [official docker docs](https://docs.docker.com/engine/install/debian/)
+
+- Start docker daemon [skip if already running]:
+```sh
+dockerd
+```
+- Build Docker image:
+```sh
+docker build . -t uniborg
+```
+- Run the image:
+```sh
+docker run uniborg
+```
+
+It is not recommended to use "sudo", while using Docker.
+GNU/Linux Permissions are highly customisable, and it is generally not required to have "ROOT" permission, ~~unless you know what you are doing~~.
+You can still install all the dependencies in your system [with ROOT permissions],
+but please be aware of the potential issues when doing so. The installed packages
+may conflict with the system package manager's installed packages, which can
+cause trouble down the road and errors when upgrading conflicting packages.
+**You have been warned.**
 
 #### The Legacy Way
 Simply clone the repository and run the main file:
 ```sh
 git clone https://github.com/udf/uniborg.git
 cd uniborg
-virtualenv -p /usr/bin/python3 venv
+python3 -m venv venv
 . ./venv/bin/activate
 pip install -r requirements.txt
-# <Create config.py with variables as given below>
-python3 -m stdborg YourSessionName
-```
-
-An example `config.py` file could be:
-
-**Not All of the variables are mandatory**
-
-__The UniBorg should work by setting only these variables__
-
-```python3
-from sample_config import Config
-
-class Development(Config):
-  APP_ID = 6
-  API_HASH = "eb06d4abfb49dc3eeb1aeb98ae0f581e"
-  TG_BOT_TOKEN_BF_HER = ""
-  TG_BOT_USER_NAME_BF_HER = ""
-  UB_BLACK_LIST_CHAT = [
-    -1001220993104,
-    -1001365798550,
-    -1001158304289,
-    -1001212593743,
-    -1001195845680,
-    -1001330468518,
-    -1001221185967,
-    -1001340243678,
-    -1001311056733,
-    -1001135438308,
-    -1001038774929,
-    -1001070622614,
-    -1001119331451,
-    -1001095401841
-  ]
-  # specify LOAD and NO_LOAD
-  LOAD = []
-  NO_LOAD = []
+cp sample_config.env config.env
+# <edit config.env with appropriate values>
+python3 -m stdborg
 ```
 
 ## internals
@@ -66,11 +60,15 @@ directory, with some utilities, enhancements, the `_core` plugin, and the `_inli
 
 ## [@SpEcHlDe](https://telegram.dog/ThankTelegram)
 
-- Only two of the environment variables are mandatory.
-- This is because of `telethon.errors.rpc_error_list.ApiIdPublishedFloodError`
-    - `APP_ID`:   You can get this value from https://my.telegram.org
-    - `API_HASH`:   You can get this value from https://my.telegram.org
-- The userbot will work without setting the non-mandatory environment variables.
+- Only five of the environment variables are mandatory.
+- Please read the [WiKi](https://github.com/SpEcHiDe/UniBorg/wiki) to understand the use of the variables.
+- This is because of `telethon.errors.ApiIdPublishedFloodError`
+    - `APP_ID`: 
+    - `API_HASH`:
+    - `TG_BOT_TOKEN_BF_HER`: 
+    - `TG_BOT_USER_NAME_BF_HER`: 
+    - `DATABASE_URL`: 
+- The userbot should work without setting the non-mandatory environment variables.
 - Please report any issues to the support group: [@SpEcHlDe](https://t.me/joinchat/AHAujEjG4FBO-TH-NrVVbg)
 
 
@@ -87,13 +85,14 @@ a new file under the plugin directory to do the job:
 
 ```python
 # stdplugins/myplugin.py
-from telethon import events
-from uniborg.util import admin_cmd
-
-@borg.on(admin_cmd(pattern="hi"))
+@borg.on(slitu.admin_cmd(pattern="hi"))
 async def handler(event):
     await event.reply("hey")
 ```
+
+## disclaimer
+
+⚠️ This fork uses "requests" module in various places, instead of the async alternative. ⚠️
 
 
 ## learning
